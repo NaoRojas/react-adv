@@ -1,7 +1,7 @@
 import styles from '../styles/styles.module.css'
 import noImage from '../assets/no-image.jpg'
 import { useProduct } from '../custom-hook/useProduct'
-import { ReactElement } from 'react'
+import { createContext, ReactElement, useContext } from 'react'
 
 interface Props {
   product: Product
@@ -17,26 +17,39 @@ interface ProductButtonsProps {
   handleAdd: () => void
   handleMinus: () => void
 }
-export const ProductImage = ({ img = '' }) => {
+interface ProductContextProps {
+  count: number
+  handleAdd: () => void
+  handleMinus: () => void
+  product: Product
+}
+
+const ProductContext = createContext({} as ProductContextProps)
+
+const { Provider } = ProductContext
+
+export const ProductImage = () => {
+  const { product } = useContext(ProductContext)
+
   return (
     // eslint-disable-next-line jsx-a11y/img-redundant-alt
     <img
       className={styles.productImg}
-      src={img ?? noImage}
+      src={product.img ?? noImage}
       alt="Product Image"
     />
   )
 }
 
-export const ProductTitle = ({ title }: { title: string }) => {
-  return <span className={styles.productDescription}>{title}</span>
+export const ProductTitle = ({ title }: { title?: string }) => {
+  const { product } = useContext(ProductContext)
+  return (
+    <span className={styles.productDescription}>{title ?? product.title}</span>
+  )
 }
 
-export const ProductButtons = ({
-  count,
-  handleAdd,
-  handleMinus,
-}: ProductButtonsProps) => {
+export const ProductButtons = () => {
+  const { count, handleAdd, handleMinus } = useContext(ProductContext)
   return (
     <div className={styles.buttonsContainer}>
       <button
@@ -54,19 +67,14 @@ export const ProductButtons = ({
   )
 }
 
-export const ProductCard = ({ children }: Props) => {
+export const ProductCard = ({ product, children }: Props) => {
   const { count, handleAdd, handleMinus } = useProduct()
 
   return (
     <div className={styles.productCard}>
-      {children}
-      {/* <ProductImage />
-      <ProductTitle title="Product Title" />
-      <ProductButtons
-        count={count}
-        handleAdd={handleAdd}
-        handleMinus={handleMinus}
-      /> */}
+      <Provider value={{ count, handleAdd, handleMinus, product }}>
+        {children}
+      </Provider>
     </div>
   )
 }
