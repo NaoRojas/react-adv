@@ -1,28 +1,8 @@
 import styles from '../styles/styles.module.css'
 import noImage from '../assets/no-image.jpg'
 import { useProduct } from '../custom-hook/useProduct'
-import { createContext, ReactElement, useContext } from 'react'
-
-interface Props {
-  product: Product
-  children?: ReactElement | ReactElement[]
-}
-interface Product {
-  id: string
-  title: string
-  img?: string
-}
-interface ProductButtonsProps {
-  count: number
-  handleAdd: () => void
-  handleMinus: () => void
-}
-interface ProductContextProps {
-  count: number
-  handleAdd: () => void
-  handleMinus: () => void
-  product: Product
-}
+import { createContext, useContext } from 'react'
+import { ProductContextProps, Props } from '../interfaces/interfaces'
 
 const ProductContext = createContext({} as ProductContextProps)
 
