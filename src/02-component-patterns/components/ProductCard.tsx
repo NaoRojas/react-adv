@@ -1,9 +1,11 @@
 import styles from '../styles/styles.module.css'
 import noImage from '../assets/no-image.jpg'
 import { useProduct } from '../custom-hook/useProduct'
+import { ReactElement } from 'react'
 
-interface ProductCardProps {
+interface Props {
   product: Product
+  children?: ReactElement | ReactElement[]
 }
 interface Product {
   id: string
@@ -52,18 +54,23 @@ export const ProductButtons = ({
   )
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ children }: Props) => {
   const { count, handleAdd, handleMinus } = useProduct()
 
   return (
     <div className={styles.productCard}>
-      <ProductImage img={product.img} />
-      <ProductTitle title={product.title} />
+      {children}
+      {/* <ProductImage />
+      <ProductTitle title="Product Title" />
       <ProductButtons
         count={count}
         handleAdd={handleAdd}
         handleMinus={handleMinus}
-      />
+      /> */}
     </div>
   )
 }
+
+ProductCard.Title = ProductTitle
+ProductCard.Image = ProductImage
+ProductCard.Buttons = ProductButtons
