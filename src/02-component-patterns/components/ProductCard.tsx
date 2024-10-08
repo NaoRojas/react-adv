@@ -10,27 +10,60 @@ interface Product {
   title: string
   img?: string
 }
+interface ProductButtonsProps {
+  count: number
+  handleAdd: () => void
+  handleMinus: () => void
+}
+export const ProductImage = ({ img = '' }) => {
+  return (
+    // eslint-disable-next-line jsx-a11y/img-redundant-alt
+    <img
+      className={styles.productImg}
+      src={img ?? noImage}
+      alt="Product Image"
+    />
+  )
+}
+
+export const ProductTitle = ({ title }: { title: string }) => {
+  return <span className={styles.productDescription}>{title}</span>
+}
+
+export const ProductButtons = ({
+  count,
+  handleAdd,
+  handleMinus,
+}: ProductButtonsProps) => {
+  return (
+    <div className={styles.buttonsContainer}>
+      <button
+        className={styles.buttonMinus}
+        onClick={() => handleMinus()}
+        disabled={count === 0}
+      >
+        -
+      </button>
+      <div className={styles.countLabel}>{count}</div>
+      <button className={styles.buttonAdd} onClick={() => handleAdd()}>
+        +
+      </button>
+    </div>
+  )
+}
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const { count, handleAdd, handleMinus } = useProduct()
 
   return (
     <div className={styles.productCard}>
-      <img className={styles.productImg} src={product.img ?? noImage} />
-      <span className={styles.productDescription}>{product.title}</span>
-      <div className={styles.buttonsContainer}>
-        <button
-          className={styles.buttonMinus}
-          onClick={() => handleMinus()}
-          disabled={count === 0}
-        >
-          -
-        </button>
-        <div className={styles.countLabel}>{count}</div>
-        <button className={styles.buttonAdd} onClick={() => handleAdd()}>
-          +
-        </button>
-      </div>
+      <ProductImage img={product.img} />
+      <ProductTitle title={product.title} />
+      <ProductButtons
+        count={count}
+        handleAdd={handleAdd}
+        handleMinus={handleMinus}
+      />
     </div>
   )
 }
